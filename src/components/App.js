@@ -1,50 +1,35 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { ContactsList } from './ContactsList/ContsctsList';
 import { FormComponent } from './Form/Form';
 import { nanoid } from 'nanoid/non-secure';
 import { Filter } from './Filter/Filter';
 
-export class App extends React.Component {
-  state = {
-    contacts: [],
-    filter: '',
-  };
-  componentDidMount() {
+export const App = () => {
+  const [contacts, setContacts] = useState([]);
+  const [filter, setFilter] = useState('');
+
+  useEffect(() => {
     const contacts = localStorage.getItem('contacts');
     const parsedContacts = JSON.parse(contacts);
 
     if (parsedContacts) {
-      this.setState({ contacts: parsedContacts });
+      setContacts(parsedContacts);
     }
-  }
+  }, []);
+  useEffect(() => {
+    localStorage.setItem('contacts', JSON.stringify(contacts));
+  }, [contacts]);
 
-  componentDidUpdate(prevProps, prevState) {
-    if (this.state.contacts !== prevState.contacts) {
-      localStorage.setItem('contacts', JSON.stringify(this.state.contacts));
-    }
-  }
-
-  filterContacts = newFilter => {
-    this.setState({
-      filter: newFilter,
-    });
-  };
-
-  getFilterAddContact = () => {
-    const { filter, contacts } = this.state;
-    return contacts.filter(contact =>
+  const filterContacts = newFilter => setFilter(newFilter);
+  const getFilterAddContact = () =>
+    contacts.filter(contact =>
       contact.name.toLowerCase().includes(filter.toLowerCase())
     );
-  };
+  const deleteContact = id =>
+    setContacts(contacts.filter(contact => contact.id !== id));
 
-  deleteContact = id => {
-    this.setState(prevState => ({
-      contacts: prevState.contacts.filter(contact => contact.id !== id),
-    }));
-  };
-
-  handleAddContact = (name, number) => {
-    const contactExists = this.state.contacts.some(
+  const handleAddContact = (name, number) => {
+    const contactExists = contacts.some(
       contact => contact.name.toLowerCase() === name.toLowerCase()
     );
 
@@ -57,23 +42,19 @@ export class App extends React.Component {
       name: name,
       number: number,
     };
-    this.setState(prevState => ({
-      contacts: [...prevState.contacts, newContact],
-    }));
+    setContacts([...contacts, newContact]);
   };
 
-  render() {
-    return (
-      <div>
-        <h1>Phonebook</h1>
-        <FormComponent addContact={this.handleAddContact} />
-        <h2>Contacts</h2>
-        <Filter onChange={this.filterContacts} />
-        <ContactsList
-          contactsState={this.getFilterAddContact()}
-          deleteContact={this.deleteContact}
-        />
-      </div>
-    );
-  }
-}
+  return (
+    <div>
+      <h1>Phonebook</h1>
+      <FormComponent addContact={handleAddContact} />
+      <h2>Contacts</h2>
+      <Filter onChange={filterContacts} />
+      <ContactsList
+        contactsState={getFilterAddContact()}
+        deleteContact={deleteContact}
+      />
+    </div>
+  );
+};
