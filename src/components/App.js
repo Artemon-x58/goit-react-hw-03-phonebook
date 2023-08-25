@@ -5,22 +5,23 @@ import { nanoid } from 'nanoid/non-secure';
 import { Filter } from './Filter/Filter';
 
 export const App = () => {
-  const [contacts, setContacts] = useState([]);
+  const [contacts, setContacts] = useState(getContactsLocalStorage());
+
   const [filter, setFilter] = useState('');
 
   useEffect(() => {
-    const contacts = localStorage.getItem('contacts');
-    const parsedContacts = JSON.parse(contacts);
-
-    if (parsedContacts) {
-      setContacts(parsedContacts);
+    if (contacts.length === 0) {
+      localStorage.removeItem('contacts');
+      return;
     }
-  }, []);
-  useEffect(() => {
-    if (contacts.length === 0) return;
     localStorage.setItem('contacts', JSON.stringify(contacts));
   }, [contacts]);
 
+  function getContactsLocalStorage() {
+    const contacts = localStorage.getItem('contacts');
+    const parsedContacts = JSON.parse(contacts);
+    return parsedContacts || [];
+  }
   const filterContacts = newFilter => setFilter(newFilter);
   const getFilterAddContact = () =>
     contacts.filter(contact =>
