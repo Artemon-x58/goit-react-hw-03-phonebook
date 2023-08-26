@@ -5,7 +5,11 @@ import { nanoid } from 'nanoid/non-secure';
 import { Filter } from './Filter/Filter';
 
 export const App = () => {
-  const [contacts, setContacts] = useState(getContactsLocalStorage());
+  const [contacts, setContacts] = useState(() => {
+    const contacts = localStorage.getItem('contacts');
+    const parsedContacts = JSON.parse(contacts);
+    return parsedContacts || [];
+  });
 
   const [filter, setFilter] = useState('');
 
@@ -17,18 +21,15 @@ export const App = () => {
     localStorage.setItem('contacts', JSON.stringify(contacts));
   }, [contacts]);
 
-  function getContactsLocalStorage() {
-    const contacts = localStorage.getItem('contacts');
-    const parsedContacts = JSON.parse(contacts);
-    return parsedContacts || [];
-  }
   const filterContacts = newFilter => setFilter(newFilter);
   const getFilterAddContact = () =>
     contacts.filter(contact =>
       contact.name.toLowerCase().includes(filter.toLowerCase())
     );
   const deleteContact = id =>
-    setContacts(contacts.filter(contact => contact.id !== id));
+    setContacts(prevContacts =>
+      prevContacts.filter(contact => contact.id !== id)
+    );
 
   const handleAddContact = (name, number) => {
     const contactExists = contacts.some(
@@ -44,7 +45,7 @@ export const App = () => {
       name: name,
       number: number,
     };
-    setContacts([...contacts, newContact]);
+    setContacts(prevContacts => [...prevContacts, newContact]);
   };
 
   return (

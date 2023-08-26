@@ -6,9 +6,7 @@ export const ListItem = ({ contact, deleteContact }) => {
   return (
     <Item id={contact.id}>
       {contact.name}: {contact.number}
-      <Delete onClick={e => deleteContact(e.target.parentNode.id)}>
-        Delete
-      </Delete>
+      <Delete onClick={e => deleteContact(contact.id)}>Delete</Delete>
     </Item>
   );
 };
