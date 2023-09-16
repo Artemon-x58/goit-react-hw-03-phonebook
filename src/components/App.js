@@ -3,6 +3,9 @@ import { ContactsList } from './ContactsList/ContsctsList';
 import { FormComponent } from './Form/Form';
 import { nanoid } from 'nanoid/non-secure';
 import { Filter } from './Filter/Filter';
+import { useDispatch } from 'react-redux';
+import { contactsFromLocalStorage } from './redux/store';
+import { addContactRedux, removeContactRedux } from './redux/contactsSlice';
 
 export const App = () => {
   const [contacts, setContacts] = useState(() => {
@@ -11,28 +14,35 @@ export const App = () => {
     return parsedContacts || [];
   });
 
-  const [filter, setFilter] = useState('');
+  const dispatch = useDispatch();
 
+  const [filter, setFilter] = useState('');
   useEffect(() => {
-    if (contacts.length === 0) {
+    if (contactsFromLocalStorage().length === 0) {
       localStorage.removeItem('contacts');
       return;
     }
-    localStorage.setItem('contacts', JSON.stringify(contacts));
-  }, [contacts]);
+    localStorage.setItem(
+      'contacts',
+      JSON.stringify(contactsFromLocalStorage())
+    );
+  }, []);
 
   const filterContacts = newFilter => setFilter(newFilter);
   const getFilterAddContact = () =>
     contacts.filter(contact =>
       contact.name.toLowerCase().includes(filter.toLowerCase())
     );
-  const deleteContact = id =>
-    setContacts(prevContacts =>
-      prevContacts.filter(contact => contact.id !== id)
+  const deleteContact = id => {
+    dispatch(removeContactRedux(id));
+    const updatedContacts = contactsFromLocalStorage().filter(
+      contact => contact.id !== id
     );
+    localStorage.setItem('contacts', JSON.stringify(updatedContacts));
+  };
 
   const handleAddContact = (name, number) => {
-    const contactExists = contacts.some(
+    const contactExists = contactsFromLocalStorage().some(
       contact => contact.name.toLowerCase() === name.toLowerCase()
     );
 
@@ -40,12 +50,16 @@ export const App = () => {
       alert(`${name} is already in contacts`);
       return;
     }
+
     const newContact = {
       id: nanoid(),
       name: name,
       number: number,
     };
-    setContacts(prevContacts => [...prevContacts, newContact]);
+
+    const updatedContacts = [...contactsFromLocalStorage(), newContact];
+    localStorage.setItem('contacts', JSON.stringify(updatedContacts));
+    dispatch(addContactRedux(nanoid(), name, number));
   };
 
   return (
