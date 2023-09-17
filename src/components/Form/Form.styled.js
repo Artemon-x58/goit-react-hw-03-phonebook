@@ -1,15 +1,41 @@
 import styled from 'styled-components';
 
-export const Form = styled.form`
-  width: 200px;
-  display: flex;
-  flex-direction: column;
+export const Title = styled.h1`
+  text-align: center;
 `;
 
-export const Label = styled.label``;
+export const Form = styled.form`
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f5f5f5;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  margin-bottom: 30px;
+`;
 
-export const Input = styled.input``;
+export const Input = styled.input`
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+  margin-bottom: 10px;
+`;
 
 export const Btn = styled.button`
-  width: 90px;
+  width: 120px;
+  padding: 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+
+  &:hover {
+    background-color: #0056b3;
+  }
 `;

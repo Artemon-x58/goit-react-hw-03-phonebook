@@ -1,36 +1,29 @@
-export const contactsFromLocalStorage = () => {
-  const contacts = localStorage.getItem('contacts');
-  const parsedContacts = JSON.parse(contacts);
-  return parsedContacts || [];
-};
+import { createSlice } from '@reduxjs/toolkit';
 
-export const addContact = (id, name, number) => {
-  return {
-    type: 'contacts/addContact',
-    payload: {
-      id,
-      name,
-      number,
+const contactsInitialState = [];
+const slice = createSlice({
+  name: 'contacts',
+  initialState: contactsInitialState,
+  reducers: {
+    addContact: {
+      reducer(state, action) {
+        state = state.push(action.payload);
+      },
+      prepare(id, name, number) {
+        return {
+          payload: {
+            id,
+            name,
+            number,
+          },
+        };
+      },
     },
-  };
-};
-
-export const removeContact = id => {
-  return {
-    type: 'contacts/removeContact',
-    payload: {
-      id: id,
+    removeContact(state, action) {
+      return (state = state.filter(contact => contact.id !== action.payload));
     },
-  };
-};
+  },
+});
 
-export const contactsReducer = (state = contactsFromLocalStorage(), action) => {
-  switch (action.type) {
-    case 'contacts/addContact':
-      return [...state, action.payload];
-    case 'contacts/removeContact':
-      return state.filter(contact => contact.id !== action.payload.id);
-    default:
-      return state;
-  }
-};
+export const contactsReducer = slice.reducer;
+export const { addContact, removeContact } = slice.actions;
