@@ -2,16 +2,41 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Btn, Form, Input, Label } from './Form.styled';
 import { nanoid } from 'nanoid/non-secure';
+import { contactsFromLocalStorage } from '../redux/contactsSlice';
+import { useDispatch } from 'react-redux';
+import { addContact } from '../redux/contactsSlice';
 
 const idName = nanoid();
 const idNumber = nanoid();
 
-export const FormComponent = ({ addContact }) => {
+export const FormComponent = () => {
+  const dispatch = useDispatch();
+  const handleAddContact = (name, number) => {
+    const contactExists = contactsFromLocalStorage().some(
+      contact => contact.name.toLowerCase() === name.toLowerCase()
+    );
+
+    if (contactExists) {
+      alert(`${name} is already in contacts`);
+      return;
+    }
+
+    const newContact = {
+      id: nanoid(),
+      name: name,
+      number: number,
+    };
+
+    const updatedContacts = [...contactsFromLocalStorage(), newContact];
+    localStorage.setItem('contacts', JSON.stringify(updatedContacts));
+    dispatch(addContact(nanoid(), name, number));
+  };
+
   const getNameAndNumber = e => {
     const number = e.currentTarget.number.value;
     const name = e.currentTarget.name.value;
     e.preventDefault();
-    addContact(name, number);
+    handleAddContact(name, number);
     e.currentTarget.reset();
   };
   return (
@@ -43,6 +68,6 @@ export const FormComponent = ({ addContact }) => {
   );
 };
 
-FormComponent.propTypes = {
-  addContact: PropTypes.func.isRequired,
-};
+// FormComponent.propTypes = {
+//   addContact: PropTypes.func.isRequired,
+// };

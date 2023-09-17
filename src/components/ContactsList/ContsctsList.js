@@ -1,32 +1,46 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { List, Title } from './ContactsList.styled';
 import { ListItem } from 'components/ListItem/ListItem';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-  addContactRedux,
-  removeContactRedux,
-} from 'components/redux/contactsSlice';
+import { removeContact } from '../redux/contactsSlice';
+import { contactsFromLocalStorage } from '../redux/contactsSlice';
 
-export const ContactsList = ({ deleteContact }) => {
-  const listState = useSelector(state => state.contacts);
+export const ContactsList = () => {
+  useEffect(() => {
+    if (contactsFromLocalStorage().length === 0) {
+      localStorage.removeItem('contacts');
+      return;
+    }
+    localStorage.setItem(
+      'contacts',
+      JSON.stringify(contactsFromLocalStorage())
+    );
+  }, []);
+  const filterStore = useSelector(state => state.filter);
 
   const dispatch = useDispatch();
+
+  const listState = useSelector(state => state.contacts);
+
+  const filterSelecter = listState.filter(contact =>
+    contact.name.toLowerCase().includes(filterStore.toLowerCase())
+  );
+
+  const deleteContact = id => {
+    dispatch(removeContact(id));
+    const updatedContacts = contactsFromLocalStorage().filter(
+      contact => contact.id !== id
+    );
+    localStorage.setItem('contacts', JSON.stringify(updatedContacts));
+  };
+
   return (
     <>
       <Title>Contacts</Title>
-      <button
-        onClick={() => dispatch(addContactRedux('12', 'Anton', '124124124'))}
-      >
-        Add Redux
-      </button>
-      <button
-        onClick={() => dispatch(removeContactRedux('GAXYKs-8dtxQuMboKyK_F'))}
-      >
-        Remove Redux
-      </button>
+
       <List>
-        {listState.map(contact => (
+        {filterSelecter.map(contact => (
           <ListItem
             key={contact.id}
             contact={contact}
@@ -38,13 +52,13 @@ export const ContactsList = ({ deleteContact }) => {
   );
 };
 
-ContactsList.propTypes = {
-  contactsState: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string.isRequired,
-      name: PropTypes.string.isRequired,
-      number: PropTypes.string.isRequired,
-    })
-  ).isRequired,
-  deleteContact: PropTypes.func.isRequired,
-};
+// ContactsList.propTypes = {
+//   contactsState: PropTypes.arrayOf(
+//     PropTypes.shape({
+//       id: PropTypes.string.isRequired,
+//       name: PropTypes.string.isRequired,
+//       number: PropTypes.string.isRequired,
+//     })
+//   ).isRequired,
+//   deleteContact: PropTypes.func.isRequired,
+// };
