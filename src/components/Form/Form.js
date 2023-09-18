@@ -2,15 +2,16 @@ import React from 'react';
 import { Btn, Form, Input } from './Form.styled';
 import { nanoid } from 'nanoid/non-secure';
 import { useDispatch, useSelector } from 'react-redux';
-import { addContact } from '../redux/contactsSlice';
+import { addContact } from '../../redux/contactsSlice';
 import toast from 'react-hot-toast';
+import { getContacts } from 'redux/selectors';
 
 const idName = nanoid();
 const idNumber = nanoid();
 
 export const FormComponent = () => {
   const dispatch = useDispatch();
-  const contactsList = useSelector(state => state.contacts);
+  const contactsList = useSelector(getContacts);
   const handleAddContact = (name, number) => {
     dispatch(addContact(nanoid(), name, number));
   };

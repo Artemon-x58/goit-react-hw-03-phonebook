@@ -3,14 +3,15 @@ import React from 'react';
 import { Container, List, Title, TitleNotFound } from './ContactsList.styled';
 import { ListItem } from 'components/ListItem/ListItem';
 import { useDispatch, useSelector } from 'react-redux';
-import { removeContact } from '../redux/contactsSlice';
+import { removeContact } from '../../redux/contactsSlice';
+import { getContacts, getFilter } from 'redux/selectors';
 
 export const ContactsList = () => {
-  const filterStore = useSelector(state => state.filter);
+  const filterStore = useSelector(getFilter);
 
   const dispatch = useDispatch();
 
-  const listState = useSelector(state => state.contacts);
+  const listState = useSelector(getContacts);
 
   const filterSelecter = listState.filter(contact =>
     contact.name.toLowerCase().includes(filterStore.toLowerCase())
