@@ -1,12 +1,23 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Delete, Item } from './ListItem.styled';
+import { deleteContact } from '../../redux/contactsSlice';
 
-export const ListItem = ({ contact, deleteContact }) => {
+import { useDispatch } from 'react-redux';
+
+export const ListItem = ({ contact }) => {
+  const dispatch = useDispatch();
+
   return (
     <Item id={contact.id}>
-      {contact.name}: {contact.number}
-      <Delete onClick={e => deleteContact(contact.id)}>Delete</Delete>
+      {contact.name}: {contact.phone}
+      <Delete
+        onClick={e => {
+          dispatch(deleteContact(contact.id));
+        }}
+      >
+        Delete
+      </Delete>
     </Item>
   );
 };
@@ -15,7 +26,6 @@ ListItem.propTypes = {
   contact: PropTypes.shape({
     id: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
-    number: PropTypes.string.isRequired,
+    phone: PropTypes.string.isRequired,
   }).isRequired,
-  deleteContact: PropTypes.func.isRequired,
 };

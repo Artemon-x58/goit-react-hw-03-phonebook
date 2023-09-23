@@ -1,24 +1,24 @@
 import React from 'react';
 import { Btn, Form, Input } from './Form.styled';
-import { nanoid } from 'nanoid/non-secure';
 import { useDispatch, useSelector } from 'react-redux';
 import { addContact } from '../../redux/contactsSlice';
 import toast from 'react-hot-toast';
-import { getContacts } from 'redux/selectors';
-
-const idName = nanoid();
-const idNumber = nanoid();
+import { selectContacts } from 'redux/selectors';
 
 export const FormComponent = () => {
   const dispatch = useDispatch();
-  const contactsList = useSelector(getContacts);
-  const handleAddContact = (name, number) => {
-    dispatch(addContact(nanoid(), name, number));
+  const contactsList = useSelector(selectContacts);
+  const handleAddContact = (name, phone) => {
+    const contactToAdd = {
+      name,
+      phone,
+    };
+    dispatch(addContact(contactToAdd));
   };
 
   const getNameAndNumber = e => {
     e.preventDefault();
-    const number = e.currentTarget.number.value;
+    const phone = e.currentTarget.phone.value;
     const name = e.currentTarget.name.value;
     const contactExists = contactsList.some(
       contact => contact.name.toLowerCase() === name.toLowerCase()
@@ -30,13 +30,12 @@ export const FormComponent = () => {
       return;
     }
 
-    handleAddContact(name, number);
+    handleAddContact(name, phone);
     e.currentTarget.reset();
   };
   return (
     <Form onSubmit={getNameAndNumber}>
       <Input
-        id={idName}
         type="text"
         name="name"
         placeholder="Name"
@@ -45,10 +44,9 @@ export const FormComponent = () => {
         required
       />
       <Input
-        id={idNumber}
         type="tel"
-        name="number"
-        placeholder="Number"
+        name="phone"
+        placeholder="Phone"
         pattern="\+?\d{1,4}?[ .\-\s]?\(?\d{1,3}?\)?[ .\-\\s]?\d{1,4}[ .\-\s]?\d{1,4}[ .\-\s]?\d{1,9}"
         title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
         required
