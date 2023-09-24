@@ -3,7 +3,7 @@ import React, { useEffect } from 'react';
 import { Container, List, Title, TitleNotFound } from './ContactsList.styled';
 import { ListItem } from 'components/ListItem/ListItem';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchContacts } from '../../redux/contactsSlice';
+import { fetchContacts } from '../../redux/operations';
 import { selectFilteredContacts, selectIsLoading } from 'redux/selectors';
 import { ThreeDots } from 'react-loader-spinner';
 

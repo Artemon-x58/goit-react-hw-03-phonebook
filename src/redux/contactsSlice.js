@@ -1,48 +1,5 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import axios from 'axios';
-
-export const fetchContacts = createAsyncThunk(
-  'contatcts/fetchContacts',
-  async (_, thunkAPI) => {
-    try {
-      const response = await axios.get(
-        'https://650e994354d18aabfe994a43.mockapi.io/contacts/contacts'
-      );
-      return response.data;
-    } catch (e) {
-      return thunkAPI.rejectWithValue(e.message);
-    }
-  }
-);
-
-export const deleteContact = createAsyncThunk(
-  'contacts/deleteContact',
-  async (contactId, thunkAPI) => {
-    try {
-      await axios.delete(
-        `https://650e994354d18aabfe994a43.mockapi.io/contacts/contacts/${contactId}`
-      );
-      return contactId;
-    } catch (e) {
-      return thunkAPI.rejectWithValue(e.message);
-    }
-  }
-);
-
-export const addContact = createAsyncThunk(
-  'contacts/addContact',
-  async (contact, thunkAPI) => {
-    try {
-      const res = await axios.post(
-        'https://650e994354d18aabfe994a43.mockapi.io/contacts/contacts',
-        contact
-      );
-      return res.data;
-    } catch (e) {
-      return thunkAPI.rejectWithValue(e.message);
-    }
-  }
-);
+import { createSlice } from '@reduxjs/toolkit';
+import { addContact, deleteContact, fetchContacts } from './operations';
 
 const handlePending = state => {
   state.isLoading = true;

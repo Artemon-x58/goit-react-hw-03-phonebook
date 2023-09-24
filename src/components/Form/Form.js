@@ -1,7 +1,7 @@
 import React from 'react';
 import { Btn, Form, Input } from './Form.styled';
 import { useDispatch, useSelector } from 'react-redux';
-import { addContact } from '../../redux/contactsSlice';
+import { addContact } from '../../redux/operations';
 import toast from 'react-hot-toast';
 import { selectContacts } from 'redux/selectors';
 
