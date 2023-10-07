@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import { Toaster } from 'react-hot-toast';
-import { Title } from './Form/Form.styled';
-import { Route, Routes } from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router-dom';
 import { Layout } from './Layout/Layout';
 import { HomePage } from 'pages/home';
 import { RestrictedRoute } from 'Routes/RestrictedRoute';
@@ -12,6 +11,7 @@ import { ContactsPage } from 'pages/contacts';
 import { useDispatch } from 'react-redux';
 import { useAuth } from 'hooks/useAuth';
 import { refreshUser } from 'redux/auth/authOperations';
+import { GlobalStyles } from './GlobalStyles/GlobalStyles';
 
 export const App = () => {
   const dispatch = useDispatch();
@@ -24,8 +24,7 @@ export const App = () => {
     <b>Refreshing user...</b>
   ) : (
     <>
-      <Title>Phonebook</Title>
-
+      <GlobalStyles />
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<HomePage />} />
@@ -55,6 +54,7 @@ export const App = () => {
             }
           />
         </Route>
+        <Route path="*" element={<Navigate to={'/'} />} />
       </Routes>
       <Toaster />
     </>

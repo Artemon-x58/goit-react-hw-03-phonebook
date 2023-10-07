@@ -8,12 +8,11 @@ export const Form = styled.form`
   width: 300px;
   display: flex;
   flex-direction: column;
-  margin: 0 auto;
+  margin: 30px auto 20px;
   padding: 20px;
   background-color: #f5f5f5;
   border-radius: 5px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-  margin-bottom: 30px;
 `;
 
 export const Input = styled.input`

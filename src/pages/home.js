@@ -1,7 +1,8 @@
+import { AuthNav } from 'components/AuthNav/AuthNav';
+import { UserMenu } from 'components/UserMenu/UserMenu';
+import { useAuth } from 'hooks/useAuth';
+
 export const HomePage = () => {
-  return (
-    <>
-      <h1>Phonebook welcome page</h1>
-    </>
-  );
+  const { isLoggedIn } = useAuth();
+  return <>{isLoggedIn ? <UserMenu /> : <AuthNav />}</>;
 };

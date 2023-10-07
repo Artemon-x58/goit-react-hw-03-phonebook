@@ -16,11 +16,11 @@ const handleRegisterFulfilled = (state, action) => {
 
 const handleLogInFulfilled = (state, action) => {
   state.user = action.payload.user;
-  state.token = action.payload.tokenl;
+  state.token = action.payload.token;
   state.isLoggedIn = true;
 };
 
-const handleLogOutFulfilled = (state, action) => {
+const handleLogOutFulfilled = state => {
   state.user = { name: null, email: null };
   state.token = null;
   state.isLoggedIn = false;
