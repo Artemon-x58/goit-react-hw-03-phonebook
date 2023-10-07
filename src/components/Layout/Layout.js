@@ -6,7 +6,7 @@ export const Layout = () => {
   return (
     <div>
       <AppBar />
-      <Suspense fullback={null}>
+      <Suspense fullback={<div>Loading...</div>}>
         <Outlet />
       </Suspense>
     </div>
